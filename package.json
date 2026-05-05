@@ -10,7 +10,8 @@
     "lint:fix": "eslint . --fix",
     "preview": "vite preview",
     "prepare": "husky",
-    "format:fix": "prettier --write ."
+    "format:fix": "prettier --write .",
+    "test": "echo \"No tests yet\""
   },
   "dependencies": {
     "react": "^19.2.5",
