@@ -1,35 +1,11 @@
 import { vi, describe, it, expect } from 'vitest'
+import {
+  makePokemonListResponse as makeListResponse,
+  makePokemonDetailResponse as makeDetailResponse,
+} from '../test-utils/mockData'
 
 const mockFetch = vi.fn()
 global.fetch = mockFetch
-
-const makeListResponse = (names: string[]) => ({
-  ok: true,
-  json: async () => ({
-    count: names.length,
-    next: null,
-    previous: null,
-    results: names.map((name, i) => ({
-      name,
-      url: `https://pokeapi.co/api/v2/pokemon/${i + 1}/`,
-    })),
-  }),
-})
-
-const makeDetailResponse = (id: number, name: string, typeName = 'grass') => ({
-  ok: true,
-  json: async () => ({
-    id,
-    name,
-    height: 7,
-    weight: 69,
-    sprites: {
-      front_default: `https://example.com/${name}.png`,
-      other: { 'official-artwork': { front_default: `https://example.com/${name}-art.png` } },
-    },
-    types: [{ slot: 1, type: { name: typeName, url: '' } }],
-  }),
-})
 
 // Tests are ordered so error cases run before the cache is populated.
 // Once getAllItems succeeds it caches results — subsequent tests rely on that cache.

@@ -1,22 +1,7 @@
 import { render, screen } from '@testing-library/react'
 import { describe, it, expect } from 'vitest'
 import Results from './Results'
-import type { Item } from '../../types'
-
-const mockItems: Item[] = [
-  {
-    id: 1,
-    name: 'Bulbasaur',
-    description: 'Height: 0.7m | Weight: 6.9kg | Type: grass/poison',
-    types: ['grass', 'poison'],
-  },
-  {
-    id: 2,
-    name: 'Charmander',
-    description: 'Height: 0.6m | Weight: 8.5kg | Type: fire',
-    types: ['fire'],
-  },
-]
+import { mockItems } from '../../test-utils/mockData'
 
 describe('Results', () => {
   it('renders correct number of items', () => {
@@ -52,9 +37,9 @@ describe('Results', () => {
     expect(screen.getByText(mockItems[0].description)).toBeInTheDocument()
   })
 
-  it('handles undefined items gracefully with default', () => {
-    // @ts-expect-error testing undefined items
-    render(<Results />)
+  it('handles empty items array gracefully', () => {
+    render(<Results items={[]} />)
     expect(screen.getByText('Results (0)')).toBeInTheDocument()
+    expect(screen.getByText(/no items found/i)).toBeInTheDocument()
   })
 })

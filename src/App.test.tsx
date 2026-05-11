@@ -3,7 +3,7 @@ import userEvent from '@testing-library/user-event'
 import { vi, describe, it, expect, beforeEach } from 'vitest'
 import App from './App'
 import { apiService } from './services/api'
-import type { Item } from './types'
+import { mockItems } from './test-utils/mockData'
 
 vi.mock('./services/api', () => ({
   apiService: {
@@ -11,21 +11,6 @@ vi.mock('./services/api', () => ({
     searchItems: vi.fn(),
   },
 }))
-
-const mockItems: Item[] = [
-  {
-    id: 1,
-    name: 'Bulbasaur',
-    description: 'Height: 0.7m | Weight: 6.9kg | Type: grass/poison',
-    types: ['grass', 'poison'],
-  },
-  {
-    id: 2,
-    name: 'Charmander',
-    description: 'Height: 0.6m | Weight: 8.5kg | Type: fire',
-    types: ['fire'],
-  },
-]
 
 describe('App', () => {
   beforeEach(() => {
