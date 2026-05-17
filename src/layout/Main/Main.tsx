@@ -1,14 +1,12 @@
-import { Component } from "react";
-import styles from "./Main.module.css";
+import type { ReactNode } from 'react';
+import styles from './Main.module.css';
 
 interface MainProps {
-  children: React.ReactNode;
+  children: ReactNode;
 }
 
-class Main extends Component<MainProps> {
-  render() {
-    return <main className={styles.main}>{this.props.children}</main>;
-  }
+function Main({ children }: MainProps) {
+  return <main className={styles.main}>{children}</main>;
 }
 
 export default Main;

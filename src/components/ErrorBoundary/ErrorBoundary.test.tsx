@@ -1,7 +1,7 @@
+import React, { Component } from 'react'
 import { render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { vi, describe, it, expect, beforeEach, afterEach } from 'vitest'
-import { Component } from 'react'
 import ErrorBoundary from './ErrorBoundary'
 
 const ThrowError = ({ shouldThrow }: { shouldThrow: boolean }) => {
@@ -12,7 +12,7 @@ const ThrowError = ({ shouldThrow }: { shouldThrow: boolean }) => {
 }
 
 class ThrowOnMount extends Component {
-  render() {
+  render(): React.ReactNode {
     throw new Error('Mount error')
   }
 }

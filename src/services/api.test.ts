@@ -5,7 +5,7 @@ import {
 } from '../test-utils/mockData'
 
 const mockFetch = vi.fn()
-global.fetch = mockFetch
+vi.stubGlobal('fetch', mockFetch)
 
 // Tests are ordered so error cases run before the cache is populated.
 // Once getAllItems succeeds it caches results — subsequent tests rely on that cache.

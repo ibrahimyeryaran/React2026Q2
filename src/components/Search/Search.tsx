@@ -1,59 +1,50 @@
-import { Component } from "react";
-import type { SearchProps, SearchState } from "../../types";
-import Button from "../Button/Button";
-import styles from "./Search.module.css";
+import { useState, useEffect } from 'react';
+import type { SearchProps } from '../../types';
+import Button from '../Button/Button';
+import useLocalStorage from '../../hooks/useLocalStorage';
+import styles from './Search.module.css';
 
-class Search extends Component<SearchProps, SearchState> {
-  constructor(props: SearchProps) {
-    super(props);
-    const savedSearchTerm = localStorage.getItem("pokemonSearchTerm");
-    const initialValue = savedSearchTerm || props.initialSearchTerm || "";
-    this.state = { inputValue: initialValue };
-  }
+function Search({ onSearch, initialSearchTerm = '' }: SearchProps) {
+  const [savedTerm, setSavedTerm] = useLocalStorage<string>('pokemonSearchTerm', '');
+  const [inputValue, setInputValue] = useState<string>(savedTerm || initialSearchTerm);
 
-  componentDidMount() {
-    const saved = localStorage.getItem("pokemonSearchTerm");
-    if (saved) {
-      this.props.onSearch(saved);
+  useEffect(() => {
+    if (savedTerm) {
+      onSearch(savedTerm);
     }
-  }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
-  handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    this.setState({ inputValue: event.target.value });
+  const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setInputValue(event.target.value);
   };
 
-  handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
-    if (event.key === "Enter") {
+  const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
+    if (event.key === 'Enter') {
       event.preventDefault();
-      this.handleSearch();
+      handleSearch();
     }
   };
 
-  handleSearch = () => {
-    const trimmedValue = this.state.inputValue.trim();
-    if (trimmedValue) {
-      localStorage.setItem("pokemonSearchTerm", trimmedValue);
-    } else {
-      localStorage.removeItem("pokemonSearchTerm");
-    }
-    this.props.onSearch(trimmedValue);
+  const handleSearch = () => {
+    const trimmedValue = inputValue.trim();
+    setSavedTerm(trimmedValue);
+    onSearch(trimmedValue);
   };
 
-  render() {
-    return (
-      <div className={styles.wrapper}>
-        <input
-          type="text"
-          className={styles.input}
-          value={this.state.inputValue}
-          onChange={this.handleInputChange}
-          onKeyDown={this.handleKeyDown}
-          placeholder="Enter pokemon name"
-        />
-        <Button onClick={this.handleSearch}>Search</Button>
-      </div>
-    );
-  }
+  return (
+    <div className={styles.wrapper}>
+      <input
+        type="text"
+        className={styles.input}
+        value={inputValue}
+        onChange={handleInputChange}
+        onKeyDown={handleKeyDown}
+        placeholder="Enter pokemon name"
+      />
+      <Button onClick={handleSearch}>Search</Button>
+    </div>
+  );
 }
 
 export default Search;
