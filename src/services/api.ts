@@ -65,6 +65,14 @@ export const apiService = {
     return items;
   },
 
+  getPokemonById: async (id: number): Promise<Item> => {
+    if (allPokemonCache) {
+      const found = allPokemonCache.find((p) => p.id === id);
+      if (found) return found;
+    }
+    return fetchPokemonDetails(`${BASE_URL}/pokemon/${id}`);
+  },
+
   searchItems: async (searchTerm: string): Promise<Item[]> => {
     if (!searchTerm.trim()) {
       return apiService.getAllItems();

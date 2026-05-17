@@ -62,6 +62,7 @@ export interface SearchState {
 
 export interface ResultsProps {
   items: Item[];
+  onItemClick?: (id: number) => void;
 }
 
 export interface CardProps {
@@ -71,10 +72,18 @@ export interface CardProps {
   height?: number;
   weight?: number;
   types?: string[];
+  id: number;
+  onClick?: (id: number) => void;
+}
+
+export interface PaginationProps {
+  currentPage: number;
+  totalPages: number;
+  onPageChange: (page: number) => void;
 }
 
 export interface ErrorBoundaryProps {
-  children: ReactNode;
+  children?: ReactNode;
 }
 
 export interface ErrorBoundaryState {

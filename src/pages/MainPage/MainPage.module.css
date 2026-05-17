@@ -1,0 +1,50 @@
+.splitLayout {
+  display: flex;
+  gap: 1.5rem;
+  align-items: flex-start;
+}
+
+.leftPanel {
+  flex: 1;
+  min-width: 0;
+}
+
+.rightPanel {
+  width: 380px;
+  flex-shrink: 0;
+  background: var(--color-bg-card);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  padding: 1.5rem;
+  box-shadow: var(--shadow-card);
+  position: sticky;
+  top: 1rem;
+}
+
+.closeButton {
+  display: block;
+  margin-bottom: 1rem;
+  padding: 0.4rem 0.85rem;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--color-text-primary);
+  background-color: transparent;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition: background-color var(--transition);
+}
+
+.closeButton:hover {
+  background-color: var(--color-error-bg);
+  border-color: var(--color-error);
+  color: var(--color-error);
+}
+
+.error {
+  color: var(--color-error);
+  padding: 1rem;
+  background-color: var(--color-error-bg);
+  border-radius: var(--radius-md);
+  margin-top: 1rem;
+}

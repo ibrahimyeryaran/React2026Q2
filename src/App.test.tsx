@@ -1,7 +1,9 @@
 import { render, screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { vi, describe, it, expect, beforeEach } from 'vitest'
+import { createMemoryRouter, RouterProvider } from 'react-router-dom'
 import App from './App'
+import MainPage from './pages/MainPage/MainPage'
 import { apiService } from './services/api'
 import { mockItems } from './test-utils/mockData'
 
@@ -12,6 +14,18 @@ vi.mock('./services/api', () => ({
   },
 }))
 
+const createTestRouter = (initialPath = '/1') =>
+  createMemoryRouter(
+    [
+      {
+        path: '/',
+        element: <App />,
+        children: [{ path: ':page', element: <MainPage /> }],
+      },
+    ],
+    { initialEntries: [initialPath] }
+  )
+
 describe('App', () => {
   beforeEach(() => {
     vi.mocked(apiService.getAllItems).mockResolvedValue(mockItems)
@@ -20,19 +34,19 @@ describe('App', () => {
   })
 
   it('renders header and search on mount', async () => {
-    render(<App />)
+    render(<RouterProvider router={createTestRouter()} />)
     expect(screen.getByText('Pokemon Search App')).toBeInTheDocument()
     expect(screen.getByPlaceholderText('Enter pokemon name')).toBeInTheDocument()
   })
 
   it('shows loader during initial data fetch', () => {
     vi.mocked(apiService.getAllItems).mockReturnValue(new Promise(() => {}))
-    render(<App />)
+    render(<RouterProvider router={createTestRouter()} />)
     expect(screen.getByText('Loading Pokémon...')).toBeInTheDocument()
   })
 
   it('displays items after successful API call', async () => {
-    render(<App />)
+    render(<RouterProvider router={createTestRouter()} />)
     await waitFor(() => {
       expect(screen.getByText('Bulbasaur')).toBeInTheDocument()
       expect(screen.getByText('Charmander')).toBeInTheDocument()
@@ -40,7 +54,7 @@ describe('App', () => {
   })
 
   it('calls getAllItems on mount', async () => {
-    render(<App />)
+    render(<RouterProvider router={createTestRouter()} />)
     await waitFor(() => {
       expect(apiService.getAllItems).toHaveBeenCalled()
     })
@@ -48,14 +62,14 @@ describe('App', () => {
 
   it('shows error message when API call fails', async () => {
     vi.mocked(apiService.getAllItems).mockRejectedValue(new Error('Network error'))
-    render(<App />)
+    render(<RouterProvider router={createTestRouter()} />)
     await waitFor(() => {
       expect(screen.getByText('Failed to load items. Please try again.')).toBeInTheDocument()
     })
   })
 
   it('hides loader after data loads', async () => {
-    render(<App />)
+    render(<RouterProvider router={createTestRouter()} />)
     await waitFor(() => {
       expect(screen.queryByText('Loading Pokémon...')).not.toBeInTheDocument()
     })
@@ -63,7 +77,7 @@ describe('App', () => {
 
   it('hides loader after error', async () => {
     vi.mocked(apiService.getAllItems).mockRejectedValue(new Error('fail'))
-    render(<App />)
+    render(<RouterProvider router={createTestRouter()} />)
     await waitFor(() => {
       expect(screen.queryByText('Loading Pokémon...')).not.toBeInTheDocument()
     })
@@ -71,7 +85,7 @@ describe('App', () => {
 
   it('searches when search term changes', async () => {
     const user = userEvent.setup()
-    render(<App />)
+    render(<RouterProvider router={createTestRouter()} />)
     await waitFor(() => screen.getByText('Bulbasaur'))
 
     const input = screen.getByPlaceholderText('Enter pokemon name')
@@ -86,7 +100,7 @@ describe('App', () => {
 
   it('updates results after a new search', async () => {
     const user = userEvent.setup()
-    render(<App />)
+    render(<RouterProvider router={createTestRouter()} />)
     await waitFor(() => screen.getByText('Charmander'))
 
     const input = screen.getByPlaceholderText('Enter pokemon name')
@@ -101,7 +115,7 @@ describe('App', () => {
 
   it('uses saved localStorage term on mount', async () => {
     localStorage.setItem('pokemonSearchTerm', 'Pika')
-    render(<App />)
+    render(<RouterProvider router={createTestRouter()} />)
     await waitFor(() => {
       expect(apiService.searchItems).toHaveBeenCalledWith('Pika')
     })
