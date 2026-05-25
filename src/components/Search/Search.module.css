@@ -13,6 +13,7 @@
   outline: none;
   transition: border-color var(--transition);
   background: var(--color-bg-card);
+  color: var(--color-text-primary);
 }
 
 .input:focus {
