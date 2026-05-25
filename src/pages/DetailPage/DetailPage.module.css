@@ -1,47 +1,101 @@
 .detail {
+  background: var(--color-bg-card);
+  border: 2px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  box-shadow: var(--shadow-card);
+}
+
+.imageContainer {
+  position: relative;
   display: flex;
-  flex-direction: column;
   align-items: center;
-  gap: 0.75rem;
+  justify-content: center;
+  padding: 2rem 1rem;
+  min-height: 240px;
+  overflow: hidden;
+}
+
+.imageContainer::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.05);
+  pointer-events: none;
 }
 
 .image {
-  width: 160px;
-  height: 160px;
+  max-width: 200px;
+  max-height: 200px;
   object-fit: contain;
-  background-color: #f0f0f0;
-  border-radius: var(--radius-md);
-  padding: 0.5rem;
+  position: relative;
+  z-index: 1;
+  filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.25));
+}
+
+.typeBadges {
+  position: absolute;
+  top: 0.75rem;
+  left: 0.75rem;
+  display: flex;
+  gap: 0.4rem;
+  flex-wrap: wrap;
+  z-index: 1;
+}
+
+.typeBadge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-size: 0.75rem;
+  font-weight: 700;
+  padding: 0.3rem 0.75rem 0.3rem 0.35rem;
+  border-radius: 999px;
+  text-transform: uppercase;
+  color: #fff;
+  letter-spacing: 0.5px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.typeDot {
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background:
+    radial-gradient(circle at center, #fff 0 4px, transparent 5px),
+    linear-gradient(to bottom, #fff 50%, rgba(255, 255, 255, 0.85) 50%);
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  flex-shrink: 0;
+}
+
+.content {
+  padding: 1rem 1.25rem 1.25rem;
 }
 
 .name {
-  font-size: 1.4rem;
+  font-size: 1.5rem;
   font-weight: 700;
   text-transform: capitalize;
   color: var(--color-text-primary);
   margin: 0;
 }
 
-.types {
-  display: flex;
-  gap: 0.4rem;
-  flex-wrap: wrap;
-  justify-content: center;
+.divider {
+  margin: 0.7rem 0;
+  border: 0;
+  border-top: 1px solid var(--color-border);
 }
 
-.type {
-  font-size: 0.8rem;
-  font-weight: 600;
-  padding: 0.25rem 0.65rem;
-  border-radius: 999px;
-  text-transform: capitalize;
-  color: #fff;
-}
-
-.stat {
+.infoLine {
   font-size: 0.95rem;
   color: var(--color-text-secondary);
-  margin: 0;
+  margin-bottom: 0.35rem;
+  line-height: 1.5;
+}
+
+.infoLabel {
+  font-weight: 700;
+  color: var(--color-text-primary);
 }
 
 .error {

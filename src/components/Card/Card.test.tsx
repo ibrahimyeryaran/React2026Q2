@@ -5,12 +5,27 @@ import Card from './Card';
 import { renderWithProviders } from '../../test-utils/renderWithProviders';
 
 describe('Card', () => {
-  it('renders name and description', () => {
+  it('renders name', () => {
     renderWithProviders(
-      <Card id={25} name="Pikachu" description="Height: 0.4m | Weight: 6.0kg | Type: electric" />
+      <Card id={25} name="Pikachu" description="desc" />
     );
     expect(screen.getByText('Pikachu')).toBeInTheDocument();
-    expect(screen.getByText('Height: 0.4m | Weight: 6.0kg | Type: electric')).toBeInTheDocument();
+  });
+
+  it('renders height and weight info lines', () => {
+    renderWithProviders(
+      <Card id={25} name="Pikachu" description="desc" height={4} weight={60} />
+    );
+    expect(screen.getByText(/Height:/)).toBeInTheDocument();
+    expect(screen.getByText(/Weight:/)).toBeInTheDocument();
+    expect(screen.getByText('4')).toBeInTheDocument();
+    expect(screen.getByText('60')).toBeInTheDocument();
+  });
+
+  it('does not render height/weight lines when not provided', () => {
+    renderWithProviders(<Card id={25} name="Pikachu" description="desc" />);
+    expect(screen.queryByText(/Height:/)).not.toBeInTheDocument();
+    expect(screen.queryByText(/Weight:/)).not.toBeInTheDocument();
   });
 
   it('renders image when provided', () => {
@@ -54,14 +69,22 @@ describe('Card', () => {
   });
 
   it('applies background color for known type', () => {
-    renderWithProviders(<Card id={1} name="Bulbasaur" description="desc" types={['grass']} />);
-    const badge = screen.getByText('grass');
+    const { container } = renderWithProviders(
+      <Card id={1} name="Bulbasaur" description="desc" types={['grass']} />
+    );
+    const badge = container.querySelector(
+      '[class*="typeBadge"]:not([class*="typeBadges"])'
+    ) as HTMLElement;
     expect(badge).toHaveStyle({ backgroundColor: '#78c850' });
   });
 
   it('applies fallback color for unknown type', () => {
-    renderWithProviders(<Card id={0} name="Unknown" description="desc" types={['unknown']} />);
-    const badge = screen.getByText('unknown');
+    const { container } = renderWithProviders(
+      <Card id={0} name="Unknown" description="desc" types={['unknown']} />
+    );
+    const badge = container.querySelector(
+      '[class*="typeBadge"]:not([class*="typeBadges"])'
+    ) as HTMLElement;
     expect(badge).toHaveStyle({ backgroundColor: '#888' });
   });
 

@@ -33,9 +33,10 @@ describe('Results', () => {
     });
   });
 
-  it('renders item descriptions', () => {
+  it('renders item info lines', () => {
     renderWithProviders(<Results items={mockItems} />);
-    expect(screen.getByText(mockItems[0].description)).toBeInTheDocument();
+    expect(screen.getAllByText(/Height:/).length).toBeGreaterThan(0);
+    expect(screen.getAllByText(/Weight:/).length).toBeGreaterThan(0);
   });
 
   it('handles empty items array gracefully', () => {
