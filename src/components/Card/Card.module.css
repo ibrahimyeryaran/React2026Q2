@@ -7,6 +7,26 @@
     transform var(--transition),
     box-shadow var(--transition);
   box-shadow: var(--shadow-card);
+  position: relative;
+}
+
+.cardSelected {
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 2px var(--color-primary);
+}
+
+.checkboxWrapper {
+  position: absolute;
+  top: 0.6rem;
+  left: 0.6rem;
+  z-index: 1;
+}
+
+.checkbox {
+  width: 18px;
+  height: 18px;
+  cursor: pointer;
+  accent-color: var(--color-primary);
 }
 
 .card:hover {

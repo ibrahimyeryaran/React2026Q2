@@ -1,4 +1,6 @@
 import type { CardProps } from '../../types';
+import { useAppDispatch, useAppSelector } from '../../store/hooks';
+import { toggleItem } from '../../store/selectedItemsSlice';
 import styles from './Card.module.css';
 
 const TYPE_COLORS: Record<string, string> = {
@@ -22,18 +24,42 @@ const TYPE_COLORS: Record<string, string> = {
   steel: '#b8b8d0',
 };
 
-function Card({ name, description, image, types, id, onClick }: CardProps) {
-  const handleClick = (e: React.MouseEvent) => {
+function Card({ name, description, image, types, id, height, weight, onClick }: CardProps) {
+  const dispatch = useAppDispatch();
+  const isSelected = useAppSelector((state) =>
+    state.selectedItems.items.some((i) => i.id === id)
+  );
+
+  const handleCardClick = (e: React.MouseEvent) => {
     e.stopPropagation();
     onClick?.(id);
   };
 
+  const handleCheckboxChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    e.stopPropagation();
+    dispatch(toggleItem({ id, name, description, image, height, weight, types }));
+  };
+
+  const handleCheckboxClick = (e: React.MouseEvent) => {
+    e.stopPropagation();
+  };
+
   return (
     <div
-      className={styles.card}
-      onClick={handleClick}
+      className={`${styles.card} ${isSelected ? styles.cardSelected : ''}`}
+      onClick={handleCardClick}
       style={{ cursor: onClick ? 'pointer' : 'default' }}
     >
+      <div className={styles.checkboxWrapper}>
+        <input
+          type="checkbox"
+          className={styles.checkbox}
+          checked={isSelected}
+          onChange={handleCheckboxChange}
+          onClick={handleCheckboxClick}
+          aria-label={`Select ${name}`}
+        />
+      </div>
       {image && (
         <div className={styles.imageContainer}>
           <img src={image} alt={name} className={styles.image} />
