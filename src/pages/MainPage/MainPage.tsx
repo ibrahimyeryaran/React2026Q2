@@ -9,7 +9,7 @@ import NotFoundPage from '../NotFoundPage/NotFoundPage';
 import usePokemonSearch from '../../hooks/usePokemonSearch';
 import styles from './MainPage.module.css';
 
-const ITEMS_PER_PAGE = 20;
+const ITEMS_PER_PAGE = 21;
 
 function MainPage() {
   const { page } = useParams<{ page: string }>();

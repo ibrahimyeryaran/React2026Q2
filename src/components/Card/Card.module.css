@@ -1,12 +1,13 @@
 .card {
   background: var(--color-bg-card);
-  border: 1px solid var(--color-border);
+  border: 2px solid var(--color-border);
   border-radius: var(--radius-lg);
   overflow: hidden;
   transition:
     transform var(--transition),
     box-shadow var(--transition);
   box-shadow: var(--shadow-card);
+  position: relative;
 }
 
 .card:hover {
@@ -14,49 +15,126 @@
   box-shadow: var(--shadow-card-hover);
 }
 
-.imageContainer {
-  background-color: #f0f0f0;
+.cardSelected {
+  border-color: var(--color-primary) !important;
+  box-shadow: 0 0 0 2px var(--color-primary);
+}
+
+.checkboxWrapper {
+  position: absolute;
+  top: 0.6rem;
+  right: 0.6rem;
+  z-index: 2;
+  background: rgba(255, 255, 255, 0.85);
+  border-radius: 50%;
+  width: 26px;
+  height: 26px;
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 1rem;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.15);
+}
+
+.checkbox {
+  width: 16px;
+  height: 16px;
+  cursor: pointer;
+  accent-color: var(--color-primary);
+}
+
+.imageContainer {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1.5rem 1rem;
+  min-height: 200px;
+  overflow: hidden;
+}
+
+.imageContainer::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.05);
+  pointer-events: none;
 }
 
 .image {
-  width: 120px;
-  height: 120px;
+  max-width: 150px;
+  max-height: 150px;
   object-fit: contain;
+  position: relative;
+  z-index: 1;
+  transition: transform var(--transition);
+  filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.25));
 }
 
-.content {
-  padding: 0.85rem 1rem;
+.card:hover .image {
+  transform: scale(1.08);
 }
 
-.name {
-  font-size: 1rem;
-  font-weight: 700;
-  margin-bottom: 0.4rem;
-  text-transform: capitalize;
-}
-
-.types {
+.typeBadges {
+  position: absolute;
+  top: 0.6rem;
+  left: 0.6rem;
   display: flex;
   gap: 0.4rem;
   flex-wrap: wrap;
-  margin-bottom: 0.5rem;
+  z-index: 1;
 }
 
-.type {
-  font-size: 0.72rem;
-  font-weight: 600;
-  padding: 0.2rem 0.55rem;
+.typeBadge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-size: 0.7rem;
+  font-weight: 700;
+  padding: 0.25rem 0.7rem 0.25rem 0.3rem;
   border-radius: 999px;
-  text-transform: capitalize;
+  text-transform: uppercase;
   color: #fff;
-  background-color: #888;
+  letter-spacing: 0.5px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
 }
 
-.description {
-  font-size: 0.8rem;
-  color: var(--color-text-secondary);
+.typeDot {
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background:
+    radial-gradient(circle at center, #fff 0 4px, transparent 5px),
+    linear-gradient(to bottom, #fff 50%, rgba(255, 255, 255, 0.85) 50%);
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  flex-shrink: 0;
 }
+
+.content {
+  padding: 0.9rem 1rem 1rem;
+}
+
+.name {
+  font-size: 1.15rem;
+  font-weight: 700;
+  text-transform: capitalize;
+  color: var(--color-text-primary);
+}
+
+.divider {
+  margin: 0.55rem 0;
+  border: 0;
+  border-top: 1px solid var(--color-border);
+}
+
+.infoLine {
+  font-size: 0.85rem;
+  color: var(--color-text-secondary);
+  margin-bottom: 0.2rem;
+  line-height: 1.5;
+}
+
+.infoLabel {
+  font-weight: 700;
+  color: var(--color-text-primary);
+}
+

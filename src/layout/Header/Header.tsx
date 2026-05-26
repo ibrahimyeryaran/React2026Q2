@@ -1,9 +1,11 @@
 import { NavLink, useLocation } from 'react-router-dom';
+import { useTheme } from '../../hooks/useTheme';
 import styles from './Header.module.css';
 
 function Header() {
   const location = useLocation();
   const isHome = !location.pathname.startsWith('/about');
+  const { theme, toggleTheme } = useTheme();
 
   return (
     <header className={styles.header}>
@@ -23,6 +25,9 @@ function Header() {
         >
           About
         </NavLink>
+        <button className={styles.themeToggle} onClick={toggleTheme}>
+          {theme === 'light' ? '🌙 Dark' : '☀️ Light'}
+        </button>
       </nav>
     </header>
   );
