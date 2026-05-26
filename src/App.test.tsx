@@ -3,7 +3,7 @@ import userEvent from '@testing-library/user-event';
 import { vi, describe, it, expect, beforeEach } from 'vitest';
 import { createMemoryRouter, RouterProvider } from 'react-router-dom';
 import { Provider } from 'react-redux';
-import { store } from './store/store';
+import { makeStore } from './test-utils/renderWithProviders';
 import { ThemeProvider } from './context/ThemeContext';
 import App from './App';
 import MainPage from './pages/MainPage/MainPage';
@@ -31,7 +31,7 @@ const createTestRouter = (initialPath = '/1') =>
 
 const renderApp = (initialPath = '/1') =>
   render(
-    <Provider store={store}>
+    <Provider store={makeStore()}>
       <ThemeProvider>
         <RouterProvider router={createTestRouter(initialPath)} />
       </ThemeProvider>
