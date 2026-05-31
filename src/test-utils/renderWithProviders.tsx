@@ -1,45 +1,37 @@
 import { type ReactNode } from 'react';
 import { render, type RenderOptions } from '@testing-library/react';
 import { Provider } from 'react-redux';
-import {
-  configureStore,
-  type Reducer,
-  type UnknownAction,
-} from '@reduxjs/toolkit';
+import { configureStore } from '@reduxjs/toolkit';
 import { MemoryRouter } from 'react-router-dom';
 import selectedItemsReducer from '../store/selectedItemsSlice';
-import pokemonReducer from '../store/pokemonSlice';
+import { pokemonApi } from '../store/pokemonApi';
 import { ThemeProvider } from '../context/ThemeContext';
-import type { RootState } from '../store/store';
 
-function makeStore(preloadedState?: Partial<RootState>) {
+function makeStore() {
   return configureStore({
     reducer: {
-      selectedItems: selectedItemsReducer as Reducer<
-        RootState['selectedItems'],
-        UnknownAction,
-        RootState['selectedItems'] | undefined
-      >,
-      pokemon: pokemonReducer as Reducer<
-        RootState['pokemon'],
-        UnknownAction,
-        RootState['pokemon'] | undefined
-      >,
+      selectedItems: selectedItemsReducer,
+      [pokemonApi.reducerPath]: pokemonApi.reducer,
     },
-    preloadedState,
+    middleware: (getDefaultMiddleware) =>
+      getDefaultMiddleware().concat(pokemonApi.middleware),
   });
 }
 
+type AppStore = ReturnType<typeof makeStore>;
+type PreloadedActions = (store: AppStore) => void;
+
 interface WrapperOptions extends RenderOptions {
-  preloadedState?: Partial<RootState>;
   initialEntries?: string[];
+  setupStore?: PreloadedActions;
 }
 
 function renderWithProviders(
   ui: ReactNode,
-  { preloadedState, initialEntries = ['/'], ...options }: WrapperOptions = {}
+  { initialEntries = ['/'], setupStore, ...options }: WrapperOptions = {}
 ) {
-  const store = makeStore(preloadedState);
+  const store = makeStore();
+  setupStore?.(store);
 
   function Wrapper({ children }: { children: ReactNode }) {
     return (

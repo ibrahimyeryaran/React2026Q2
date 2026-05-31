@@ -1,7 +1,6 @@
-import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
-import { apiService } from '../../services/api';
-import type { Item } from '../../types';
+import { useGetPokemonByIdQuery, pokemonApi } from '../../store/pokemonApi';
+import { useAppDispatch } from '../../store/hooks';
 import Loader from '../../components/Loader/Loader';
 import styles from './DetailPage.module.css';
 
@@ -62,34 +61,22 @@ function buildGradient(types?: string[]): string {
 
 function DetailPage() {
   const { detailId } = useParams<{ detailId: string }>();
-  const [pokemon, setPokemon] = useState<Item | null>(null);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
+  const dispatch = useAppDispatch();
+  const id = Number(detailId);
 
-  useEffect(() => {
-    if (!detailId) return;
-    const id = parseInt(detailId, 10);
-    if (isNaN(id)) return;
+  const {
+    data: pokemon,
+    isFetching,
+    isError,
+  } = useGetPokemonByIdQuery(id, { skip: !detailId || isNaN(id) });
 
-    const fetchDetail = async () => {
-      setLoading(true);
-      setError(null);
-      try {
-        const data = await apiService.getPokemonById(id);
-        setPokemon(data);
-      } catch {
-        setError('Failed to load details. Please try again.');
-      } finally {
-        setLoading(false);
-      }
-    };
+  const handleRefresh = () => {
+    dispatch(pokemonApi.util.invalidateTags([{ type: 'Pokemon', id }]));
+  };
 
-    fetchDetail();
-  }, [detailId]);
+  if (isFetching) return <Loader />;
 
-  if (loading) return <Loader />;
-
-  if (error) return <p className={styles.error}>{error}</p>;
+  if (isError) return <p className={styles.error}>Failed to load details. Please try again.</p>;
 
   if (!pokemon) return null;
 
@@ -149,6 +136,14 @@ function DetailPage() {
             {(pokemon.weight / 10).toFixed(1)} kg
           </p>
         )}
+        <button
+          type="button"
+          className={styles.refreshButton}
+          onClick={handleRefresh}
+          aria-label="Refresh details"
+        >
+          ↻ Refresh
+        </button>
       </div>
     </div>
   );

@@ -98,6 +98,26 @@
   color: var(--color-text-primary);
 }
 
+.refreshButton {
+  margin-top: 1rem;
+  padding: 0.5rem 1rem;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--color-text-primary);
+  background-color: var(--color-bg-card);
+  border: 1.5px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition:
+    background-color var(--transition),
+    border-color var(--transition);
+}
+
+.refreshButton:hover {
+  border-color: var(--color-primary);
+  color: var(--color-primary);
+}
+
 .error {
   color: var(--color-error);
   font-size: 0.9rem;

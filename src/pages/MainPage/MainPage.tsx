@@ -17,7 +17,8 @@ function MainPage() {
   const detailMatch = useMatch('/:page/details/:detailId');
 
   const pageNum = parseInt(page || '', 10);
-  const { items, loading, error, searchTerm, handleSearch } = usePokemonSearch();
+  const { items, loading, error, searchTerm, handleSearch, refresh } =
+    usePokemonSearch();
 
   const totalPages = Math.max(1, Math.ceil(items.length / ITEMS_PER_PAGE));
   const safeCurrentPage = Math.min(
@@ -57,7 +58,17 @@ function MainPage() {
         >
           {/* stopPropagation prevents interactive elements from accidentally closing the detail panel */}
           <div onClick={(e) => e.stopPropagation()}>
-            <Search onSearch={onSearch} initialSearchTerm={searchTerm} />
+            <div className={styles.searchRow}>
+              <Search onSearch={onSearch} initialSearchTerm={searchTerm} />
+              <button
+                type="button"
+                className={styles.refreshButton}
+                onClick={refresh}
+                aria-label="Refresh list"
+              >
+                ↻ Refresh
+              </button>
+            </div>
 
             {loading && <Loader />}
             {error && <div className={styles.error}>{error}</div>}
