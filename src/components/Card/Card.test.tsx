@@ -3,6 +3,7 @@ import userEvent from '@testing-library/user-event';
 import { describe, it, expect, vi } from 'vitest';
 import Card from './Card';
 import { renderWithProviders } from '../../test-utils/renderWithProviders';
+import { toggleItem } from '../../store/selectedItemsSlice';
 
 describe('Card', () => {
   it('renders name', () => {
@@ -127,11 +128,10 @@ describe('Card', () => {
 
   it('shows as selected when preloaded in store', () => {
     renderWithProviders(<Card id={25} name="Pikachu" description="desc" />, {
-      preloadedState: {
-        selectedItems: {
-          items: [{ id: 25, name: 'Pikachu', description: 'desc' }],
-        },
-      },
+      setupStore: (store) =>
+        store.dispatch(
+          toggleItem({ id: 25, name: 'Pikachu', description: 'desc' })
+        ),
     });
     const checkbox = screen.getByRole('checkbox', { name: /select pikachu/i });
     expect(checkbox).toBeChecked();

@@ -4,6 +4,12 @@ import { describe, it, expect, vi } from 'vitest';
 import Flyout from './Flyout';
 import { renderWithProviders } from '../../test-utils/renderWithProviders';
 import { mockItems } from '../../test-utils/mockData';
+import { toggleItem } from '../../store/selectedItemsSlice';
+import type { Item } from '../../types';
+
+const selectItems = (items: Item[]) => (store: {
+  dispatch: (action: ReturnType<typeof toggleItem>) => void;
+}) => items.forEach((item) => store.dispatch(toggleItem(item)));
 
 describe('Flyout', () => {
   it('does not render when no items selected', () => {
@@ -13,21 +19,21 @@ describe('Flyout', () => {
 
   it('renders when items are selected', () => {
     renderWithProviders(<Flyout />, {
-      preloadedState: { selectedItems: { items: [mockItems[0]] } },
+      setupStore: selectItems([mockItems[0]]),
     });
     expect(screen.getByText(/1 item selected/i)).toBeInTheDocument();
   });
 
   it('displays correct count for multiple items', () => {
     renderWithProviders(<Flyout />, {
-      preloadedState: { selectedItems: { items: mockItems } },
+      setupStore: selectItems(mockItems),
     });
     expect(screen.getByText(/2 items selected/i)).toBeInTheDocument();
   });
 
   it('unselect all button clears store', async () => {
     const { store } = renderWithProviders(<Flyout />, {
-      preloadedState: { selectedItems: { items: mockItems } },
+      setupStore: selectItems(mockItems),
     });
     await userEvent.click(screen.getByRole('button', { name: /unselect all/i }));
     expect(store.getState().selectedItems.items).toHaveLength(0);
@@ -52,7 +58,7 @@ describe('Flyout', () => {
     });
 
     renderWithProviders(<Flyout />, {
-      preloadedState: { selectedItems: { items: mockItems } },
+      setupStore: selectItems(mockItems),
     });
 
     await userEvent.click(screen.getByRole('button', { name: /download/i }));
@@ -82,7 +88,7 @@ describe('Flyout', () => {
     globalThis.URL.revokeObjectURL = vi.fn();
 
     renderWithProviders(<Flyout />, {
-      preloadedState: { selectedItems: { items: mockItems } },
+      setupStore: selectItems(mockItems),
     });
 
     await userEvent.click(screen.getByRole('button', { name: /download/i }));

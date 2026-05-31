@@ -1,21 +1,17 @@
 import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { vi, describe, it, expect, beforeEach } from 'vitest';
+import { vi, describe, it, expect, beforeEach, afterEach } from 'vitest';
 import { createMemoryRouter, RouterProvider } from 'react-router-dom';
 import { Provider } from 'react-redux';
 import { makeStore } from './test-utils/renderWithProviders';
 import { ThemeProvider } from './context/ThemeContext';
 import App from './App';
 import MainPage from './pages/MainPage/MainPage';
-import { apiService } from './services/api';
-import { mockItems } from './test-utils/mockData';
-
-vi.mock('./services/api', () => ({
-  apiService: {
-    getAllItems: vi.fn(),
-    searchItems: vi.fn(),
-  },
-}));
+import {
+  createFetchMock,
+  defaultMockPokemons,
+  urlOf,
+} from './test-utils/mockFetch';
 
 const createTestRouter = (initialPath = '/1') =>
   createMemoryRouter(
@@ -40,19 +36,27 @@ const renderApp = (initialPath = '/1') =>
 
 describe('App', () => {
   beforeEach(() => {
-    vi.mocked(apiService.getAllItems).mockResolvedValue(mockItems);
-    vi.mocked(apiService.searchItems).mockResolvedValue([mockItems[0]]);
+    vi.stubGlobal('fetch', createFetchMock(defaultMockPokemons));
     localStorage.clear();
   });
 
-  it('renders header and search on mount', async () => {
+  afterEach(() => {
+    vi.unstubAllGlobals();
+  });
+
+  it('renders header and search on mount', () => {
     renderApp();
     expect(screen.getByText('Pokemon Search App')).toBeInTheDocument();
-    expect(screen.getByPlaceholderText('Enter pokemon name')).toBeInTheDocument();
+    expect(
+      screen.getByPlaceholderText('Enter pokemon name')
+    ).toBeInTheDocument();
   });
 
   it('shows loader during initial data fetch', () => {
-    vi.mocked(apiService.getAllItems).mockReturnValue(new Promise(() => {}));
+    vi.stubGlobal(
+      'fetch',
+      vi.fn(() => new Promise<Response>(() => {}))
+    );
     renderApp();
     expect(screen.getByText('Loading Pokémon...')).toBeInTheDocument();
   });
@@ -65,18 +69,27 @@ describe('App', () => {
     });
   });
 
-  it('calls getAllItems on mount', async () => {
+  it('fetches the pokemon list on mount', async () => {
     renderApp();
     await waitFor(() => {
-      expect(apiService.getAllItems).toHaveBeenCalled();
+      expect(fetch).toHaveBeenCalled();
     });
+    const calledUrls = (fetch as ReturnType<typeof vi.fn>).mock.calls.map((c) =>
+      urlOf(c[0])
+    );
+    expect(calledUrls.some((u) => u.includes('pokemon?limit'))).toBe(true);
   });
 
   it('shows error message when API call fails', async () => {
-    vi.mocked(apiService.getAllItems).mockRejectedValue(new Error('Network error'));
+    vi.stubGlobal(
+      'fetch',
+      vi.fn(async () => new Response('error', { status: 500 }))
+    );
     renderApp();
     await waitFor(() => {
-      expect(screen.getByText('Failed to load items. Please try again.')).toBeInTheDocument();
+      expect(
+        screen.getByText('Failed to load items. Please try again.')
+      ).toBeInTheDocument();
     });
   });
 
@@ -88,29 +101,17 @@ describe('App', () => {
   });
 
   it('hides loader after error', async () => {
-    vi.mocked(apiService.getAllItems).mockRejectedValue(new Error('fail'));
+    vi.stubGlobal(
+      'fetch',
+      vi.fn(async () => new Response('error', { status: 500 }))
+    );
     renderApp();
     await waitFor(() => {
       expect(screen.queryByText('Loading Pokémon...')).not.toBeInTheDocument();
     });
   });
 
-  it('searches when search term changes', async () => {
-    const user = userEvent.setup();
-    renderApp();
-    await waitFor(() => screen.getByText('Bulbasaur'));
-
-    const input = screen.getByPlaceholderText('Enter pokemon name');
-    await user.clear(input);
-    await user.type(input, 'Bulb');
-    await user.click(screen.getByRole('button', { name: /search/i }));
-
-    await waitFor(() => {
-      expect(apiService.searchItems).toHaveBeenCalledWith('Bulb');
-    });
-  });
-
-  it('updates results after a new search', async () => {
+  it('filters results client-side when searching', async () => {
     const user = userEvent.setup();
     renderApp();
     await waitFor(() => screen.getByText('Charmander'));
@@ -125,11 +126,34 @@ describe('App', () => {
     });
   });
 
-  it('uses saved localStorage term on mount', async () => {
-    localStorage.setItem('pokemonSearchTerm', 'Pika');
+  it('does not refetch the list when searching (uses cache)', async () => {
+    const user = userEvent.setup();
+    renderApp();
+    await waitFor(() => screen.getByText('Bulbasaur'));
+
+    const listCallsBefore = (
+      fetch as ReturnType<typeof vi.fn>
+    ).mock.calls.filter((c) => urlOf(c[0]).includes('pokemon?limit')).length;
+
+    const input = screen.getByPlaceholderText('Enter pokemon name');
+    await user.type(input, 'Bulb');
+    await user.click(screen.getByRole('button', { name: /search/i }));
+
+    await waitFor(() => screen.getByText('Bulbasaur'));
+
+    const listCallsAfter = (
+      fetch as ReturnType<typeof vi.fn>
+    ).mock.calls.filter((c) => urlOf(c[0]).includes('pokemon?limit')).length;
+
+    expect(listCallsAfter).toBe(listCallsBefore);
+  });
+
+  it('applies saved localStorage search term on mount', async () => {
+    localStorage.setItem('pokemonSearchTerm', 'Bulb');
     renderApp();
     await waitFor(() => {
-      expect(apiService.searchItems).toHaveBeenCalledWith('Pika');
+      expect(screen.getByText('Bulbasaur')).toBeInTheDocument();
     });
+    expect(screen.queryByText('Charmander')).not.toBeInTheDocument();
   });
 });

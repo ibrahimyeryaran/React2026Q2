@@ -48,3 +48,33 @@
   border-radius: var(--radius-md);
   margin-top: 1rem;
 }
+
+.searchRow {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+}
+
+.searchRow > :first-child {
+  flex: 1;
+}
+
+.refreshButton {
+  padding: 0.65rem 1.1rem;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--color-text-primary);
+  background-color: var(--color-bg-card);
+  border: 1.5px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  white-space: nowrap;
+  transition:
+    background-color var(--transition),
+    border-color var(--transition);
+}
+
+.refreshButton:hover {
+  border-color: var(--color-primary);
+  color: var(--color-primary);
+}
