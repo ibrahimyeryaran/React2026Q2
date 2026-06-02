@@ -1,0 +1,99 @@
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+}
+
+.label {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #374151;
+}
+
+.input,
+.select {
+  padding: 0.55rem 0.7rem;
+  font-size: 0.95rem;
+  border: 1.5px solid #d1d5db;
+  border-radius: 8px;
+  outline: none;
+  background: #fff;
+  color: #111827;
+  transition: border-color 0.15s ease;
+}
+
+.input:focus,
+.select:focus {
+  border-color: #6366f1;
+}
+
+.inputInvalid {
+  border-color: #ef4444;
+}
+
+.radioGroup {
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+}
+
+.radioOption {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-size: 0.9rem;
+  color: #374151;
+}
+
+.checkboxRow {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.checkboxRow label {
+  font-size: 0.9rem;
+  color: #374151;
+}
+
+/* Reserve vertical space so showing/hiding errors does not shift layout. */
+.errorSlot {
+  min-height: 1.05rem;
+  font-size: 0.78rem;
+  line-height: 1.05rem;
+  color: #ef4444;
+}
+
+.actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.75rem;
+  margin-top: 0.5rem;
+}
+
+.submit {
+  padding: 0.6rem 1.4rem;
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: #fff;
+  background: #6366f1;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background 0.15s ease;
+}
+
+.submit:hover:not(:disabled) {
+  background: #4f46e5;
+}
+
+.submit:disabled {
+  background: #c7d2fe;
+  cursor: not-allowed;
+}
