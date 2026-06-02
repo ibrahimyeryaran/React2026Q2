@@ -59,6 +59,19 @@ describe('UncontrolledForm', () => {
     expect(submissions[0].image).toMatch(/^data:image\/png;base64,/);
   });
 
+  it('reports the password mismatch on submit even when other fields are empty', async () => {
+    const user = userEvent.setup();
+    render(<UncontrolledForm onSuccess={() => {}} />);
+
+    await user.type(screen.getByLabelText('Password'), 'Abc123!@');
+    await user.type(screen.getByLabelText('Confirm Password'), 'Different1!');
+    await user.click(screen.getByRole('button', { name: /submit/i }));
+
+    expect(
+      await screen.findByText(/passwords do not match/i)
+    ).toBeInTheDocument();
+  });
+
   it('blocks submission when passwords do not match', async () => {
     const user = userEvent.setup();
     const onSuccess = vi.fn();

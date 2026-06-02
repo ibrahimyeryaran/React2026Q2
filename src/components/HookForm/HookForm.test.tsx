@@ -37,6 +37,19 @@ describe('HookForm', () => {
     ).toBeInTheDocument();
   });
 
+  it('shows the password mismatch error immediately, even with other fields empty', async () => {
+    const user = userEvent.setup();
+    render(<HookForm onSuccess={() => {}} />);
+
+    await user.type(screen.getByLabelText('Password'), 'Abc123!@');
+    await user.type(screen.getByLabelText('Confirm Password'), 'Different1!');
+
+    expect(
+      await screen.findByText(/passwords do not match/i)
+    ).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: /submit/i })).toBeDisabled();
+  });
+
   it('enables submit and stores data when the form is valid', async () => {
     const user = userEvent.setup();
     const onSuccess = vi.fn();

@@ -33,6 +33,12 @@ function HookForm({ onSuccess }: HookFormProps) {
   });
 
   const password = watch('password') ?? '';
+  const confirmPassword = watch('confirmPassword') ?? '';
+  const passwordsMismatch =
+    confirmPassword.length > 0 && password !== confirmPassword;
+  const confirmError =
+    errors.confirmPassword?.message ??
+    (passwordsMismatch ? 'Passwords do not match' : undefined);
 
   const onValid = handleSubmit(async (values) => {
     const submission = await buildSubmission(values, 'react-hook-form');
@@ -119,7 +125,7 @@ function HookForm({ onSuccess }: HookFormProps) {
           type="password"
           {...register('confirmPassword')}
         />
-        <FieldError message={errors.confirmPassword?.message} />
+        <FieldError message={confirmError} />
       </div>
 
       <div className={styles.field}>
@@ -157,7 +163,11 @@ function HookForm({ onSuccess }: HookFormProps) {
       <FieldError message={errors.acceptTerms?.message} />
 
       <div className={styles.actions}>
-        <button type="submit" className={styles.submit} disabled={!isValid}>
+        <button
+          type="submit"
+          className={styles.submit}
+          disabled={!isValid || passwordsMismatch}
+        >
           Submit
         </button>
       </div>

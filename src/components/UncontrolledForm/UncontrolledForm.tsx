@@ -59,6 +59,11 @@ function UncontrolledForm({ onSuccess }: UncontrolledFormProps) {
           fieldErrors[key] = issue.message;
         }
       }
+      // The schema's cross-field password check is skipped when other fields
+      // fail to parse, so enforce it independently on submit.
+      if (raw.password !== raw.confirmPassword && !fieldErrors.confirmPassword) {
+        fieldErrors.confirmPassword = 'Passwords do not match';
+      }
       setErrors(fieldErrors);
       return;
     }
