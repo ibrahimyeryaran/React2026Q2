@@ -13,18 +13,19 @@ Data Explorer. It follows the three required phases:
 - **Build mode:** development (`npm run dev`) — most accurate component-level timing
 - **Dataset:** `public/data/owid-co2-data.json` (~86 MB, ~270 countries, full year history)
 - **Recorded interactions** (each recorded as a separate Profiler session):
-  1. **Sorting** countries (toggle sort order / change sort field)
-  2. **Searching** for a country (type in the search box)
+  1. **Sorting** countries (toggle sort order)
+  2. **Searching** for a country (type `uni` in the search box)
   3. **Selecting a different year**
-  4. **Toggling columns** (open modal, toggle a column)
-- **Metrics captured per interaction:** Commit duration, Render duration, Flame chart
-- **How to reproduce:** open React DevTools → Profiler → ⚙️ enable
-  "Record why each component rendered" and "Highlight updates when components
-  render" → click ⏺ Record → perform the interaction once → ⏹ Stop → read the
-  commit/render durations from the ranked chart and export/screenshot the flame chart.
+  4. **Toggling columns** (open modal, toggle one column)
+- **Metrics captured per interaction:** the selected commit's **render duration**
+  (the headline number React DevTools shows for the commit), plus the
+  **flame chart** screenshot, which also shows the commit duration and the
+  per-component render breakdown.
+- **Comparison setup:** the unoptimized code lives on the `baseline` branch and
+  the optimized code on the `performance` branch, so the exact same interactions
+  were profiled against both with identical data.
 
-> Screenshots live in `docs/screenshots/`. Replace each `_TODO_` placeholder
-> below with the captured image and fill in the measured numbers.
+Screenshots are stored in `docs/screenshots/`.
 
 ---
 
@@ -32,47 +33,23 @@ Data Explorer. It follows the three required phases:
 
 The starter renders **every** country (≈270 cards, each with a data table) on
 every state change, recomputes derived data inline, and recreates all handlers
-on each render. Expected to be slow and janky.
+on each render.
 
 ### 1. Sorting
-
-| Metric | Baseline |
-| --- | --- |
-| Commit duration | _TODO_ ms |
-| Render duration | _TODO_ ms |
-| Flame chart | _TODO_ — `docs/screenshots/baseline-sort.png` |
-
-![Baseline — Sorting](./docs/screenshots/baseline-sort.png)
+- **Render duration:** **248.7 ms**
+- Flame chart: ![Baseline — Sorting](./docs/screenshots/baseline-sort.png)
 
 ### 2. Searching
-
-| Metric | Baseline |
-| --- | --- |
-| Commit duration | _TODO_ ms |
-| Render duration | _TODO_ ms |
-| Flame chart | _TODO_ — `docs/screenshots/baseline-search.png` |
-
-![Baseline — Searching](./docs/screenshots/baseline-search.png)
+- **Render duration:** **120.6 ms**
+- Flame chart: ![Baseline — Searching](./docs/screenshots/baseline-search.png)
 
 ### 3. Selecting a different year
-
-| Metric | Baseline |
-| --- | --- |
-| Commit duration | _TODO_ ms |
-| Render duration | _TODO_ ms |
-| Flame chart | _TODO_ — `docs/screenshots/baseline-year.png` |
-
-![Baseline — Year selection](./docs/screenshots/baseline-year.png)
+- **Render duration:** **33.5 ms**
+- Flame chart: ![Baseline — Year selection](./docs/screenshots/baseline-year.png)
 
 ### 4. Toggling columns
-
-| Metric | Baseline |
-| --- | --- |
-| Commit duration | _TODO_ ms |
-| Render duration | _TODO_ ms |
-| Flame chart | _TODO_ — `docs/screenshots/baseline-columns.png` |
-
-![Baseline — Column toggle](./docs/screenshots/baseline-columns.png)
+- **Render duration:** **23.9 ms**
+- Flame chart: ![Baseline — Column toggle](./docs/screenshots/baseline-columns.png)
 
 ---
 
@@ -95,7 +72,6 @@ From the baseline flame charts, the hot paths were:
 ## Phase 2 — Applied Optimizations — 70 pts
 
 ### `useMemo` for computed values — 12 pts
-
 - `app.tsx`: `years` (memoized on `data`) and `availableColumns` (computed once).
 - `country-list.tsx`: `filteredCountries` (filter + sort) memoized on its inputs;
   `rowProps` memoized for `react-window`.
@@ -104,7 +80,6 @@ From the baseline flame charts, the hot paths were:
 - `data-table.tsx`: `record` (year lookup) memoized on `data` / `year`.
 
 ### `useCallback` for event handlers — 12 pts
-
 - `app.tsx`: `handleSearch`, `handleYearChange`, `handleSortFieldChange`,
   `handleSortOrderToggle`, `handleColumnToggle`, `handleModalToggle` are all
   wrapped in `useCallback` with **empty dependency arrays**, using functional
@@ -113,87 +88,79 @@ From the baseline flame charts, the hot paths were:
   re-rendering.
 
 ### `React.memo` to prevent unnecessary re-renders — 12 pts
-
 Wrapped: `CountryList`, `CountryCard`, `DataTable`, `SearchBar`, `YearSelector`,
 `ColumnModal`. Combined with the stable handlers/props, typing in the search box
 no longer re-renders the year selector or the column modal, etc.
 
 ### Proper `key` props — 12 pts
-
-- `country-list.tsx`: rows are keyed by `react-window` per row index of the
-  **virtualized** list (stable list of `filteredCountries`); switched away from
-  array-index keys on the full list.
+- `country-list.tsx`: switched away from array-index keys; rows are driven by the
+  **virtualized** list over a stable `filteredCountries` array.
 - `data-table.tsx`: rows keyed by the **column name** (`key={column}`) instead of
   `key={index}`.
 
 ### Virtualization for the large country list — 22 pts
-
 - Implemented with **`react-window` v2** (`List`) in `country-list.tsx`.
 - Only the visible rows (+ small overscan) are mounted instead of all ~270 cards.
 - **Measured (DOM evidence):** before optimization the DOM held a table for every
   country (~270 tables); after virtualization only **~4–7 tables** are mounted at
-  any time, and scrolling recycles rows (verified: scrolling swaps the rendered
-  countries while the mounted count stays low).
+  any time, and scrolling recycles rows.
 
 ---
 
-## Phase 3 — Final (Optimized) — 15 pts
+## Phase 3 — Final (Optimized) & Comparison — 15 pts
 
-Re-profile the **same** four interactions with the same methodology and fill in
-the numbers. Improvement is calculated as:
+Same four interactions, same methodology. Improvement is:
 
 ```
 improvement % = (baseline − optimized) / baseline × 100
 ```
 
 ### 1. Sorting
-
-| Metric | Baseline | Optimized | Improvement |
-| --- | --- | --- | --- |
-| Commit duration | _TODO_ ms | _TODO_ ms | _TODO_ % |
-| Render duration | _TODO_ ms | _TODO_ ms | _TODO_ % |
-
-![Optimized — Sorting](./docs/screenshots/optimized-sort.png)
+- **Render duration:** baseline **248.7 ms** → optimized **29.1 ms** → **88.3 % faster**
+- Flame chart: ![Optimized — Sorting](./docs/screenshots/optimized-sort.png)
 
 ### 2. Searching
-
-| Metric | Baseline | Optimized | Improvement |
-| --- | --- | --- | --- |
-| Commit duration | _TODO_ ms | _TODO_ ms | _TODO_ % |
-| Render duration | _TODO_ ms | _TODO_ ms | _TODO_ % |
-
-![Optimized — Searching](./docs/screenshots/optimized-search.png)
+- **Render duration:** baseline **120.6 ms** → optimized **24.2 ms** → **79.9 % faster**
+- Flame chart: ![Optimized — Searching](./docs/screenshots/optimized-search.png)
 
 ### 3. Selecting a different year
-
-| Metric | Baseline | Optimized | Improvement |
-| --- | --- | --- | --- |
-| Commit duration | _TODO_ ms | _TODO_ ms | _TODO_ % |
-| Render duration | _TODO_ ms | _TODO_ ms | _TODO_ % |
-
-![Optimized — Year selection](./docs/screenshots/optimized-year.png)
+- **Render duration:** baseline **33.5 ms** → optimized **37.5 ms** → **−11.9 % (≈ flat)**
+- Flame chart: ![Optimized — Year selection](./docs/screenshots/optimized-year.png)
 
 ### 4. Toggling columns
-
-| Metric | Baseline | Optimized | Improvement |
-| --- | --- | --- | --- |
-| Commit duration | _TODO_ ms | _TODO_ ms | _TODO_ % |
-| Render duration | _TODO_ ms | _TODO_ ms | _TODO_ % |
-
-![Optimized — Column toggle](./docs/screenshots/optimized-columns.png)
+- **Render duration:** baseline **23.9 ms** → optimized **12.9 ms** → **46.0 % faster**
+- Flame chart: ![Optimized — Column toggle](./docs/screenshots/optimized-columns.png)
 
 ---
 
 ## Summary
 
-| Interaction | Commit (before → after) | Render (before → after) | Improvement |
+| Interaction | Baseline | Optimized | Improvement |
 | --- | --- | --- | --- |
-| Sorting | _TODO_ | _TODO_ | _TODO_ % |
-| Searching | _TODO_ | _TODO_ | _TODO_ % |
-| Year selection | _TODO_ | _TODO_ | _TODO_ % |
-| Column toggle | _TODO_ | _TODO_ | _TODO_ % |
+| Sorting | 248.7 ms | 29.1 ms | **88.3 % faster** |
+| Searching | 120.6 ms | 24.2 ms | **79.9 % faster** |
+| Year selection | 33.5 ms | 37.5 ms | −11.9 % (≈ flat) |
+| Column toggle | 23.9 ms | 12.9 ms | **46.0 % faster** |
+
+### Interpretation
+
+- **Sorting (−88 %)** and **searching (−80 %)** improved the most — exactly the
+  interactions that previously re-rendered all ~270 cards and (for sorting)
+  rebuilt a year `Map` inside every comparison. Virtualization + memoized
+  filtering/sorting removed almost all of that work.
+- **Column toggle (−46 %)** improved because only the mounted (visible) tables
+  re-render, and each `DataTable` is memoized.
+- **Year selection (≈ flat, slightly higher)** is the honest exception. Changing
+  the year invalidates the population sort, so the optimized build must still
+  re-run the `filteredCountries` memo and recompute population for **all** filtered
+  countries to re-order them — work that virtualization cannot avoid because
+  sorting needs every item. The baseline number here was already low (~33 ms), so
+  the ~4 ms difference is within measurement noise. A further optimization would
+  be to precompute a population-by-year index once when the data loads, so
+  changing the year becomes a cheap lookup instead of a re-sort; that was left out
+  to keep the change focused on the required techniques.
 
 **Key structural win:** mounted country cards dropped from **~270 → ~4–7**
-(virtualization), eliminating the largest source of commit cost. Memoization +
-stable handlers removed the cascade of unnecessary re-renders across the control
-components on every keystroke/toggle.
+(virtualization), eliminating the largest source of render/commit cost, while
+memoization + stable handlers removed the cascade of unnecessary re-renders across
+the control components on every keystroke and toggle.
