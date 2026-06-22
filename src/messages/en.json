@@ -1,0 +1,55 @@
+{
+  "Header": {
+    "title": "Pokemon Search App",
+    "home": "Home",
+    "about": "About",
+    "themeToDark": "🌙 Dark",
+    "themeToLight": "☀️ Light"
+  },
+  "Search": {
+    "placeholder": "Enter pokemon name",
+    "button": "Search"
+  },
+  "Results": {
+    "title": "Results ({count})",
+    "empty": "No items found. Try searching for something!"
+  },
+  "Card": {
+    "types": "Types:",
+    "height": "Height:",
+    "weight": "Weight:",
+    "select": "Select {name}"
+  },
+  "Detail": {
+    "types": "Types:",
+    "height": "Height:",
+    "weight": "Weight:",
+    "close": "✕ Close",
+    "empty": "Select a Pokémon to see details.",
+    "notFound": "Pokémon not found."
+  },
+  "Pagination": {
+    "prev": "« Prev",
+    "next": "Next »"
+  },
+  "Flyout": {
+    "selected": "{count, plural, one {# item selected} other {# items selected}}",
+    "unselectAll": "Unselect all",
+    "download": "Download"
+  },
+  "About": {
+    "title": "About This App",
+    "intro": "This is a Pokémon search application built with Next.js App Router.",
+    "paragraph1": "Browse the original 151 Pokémon, search by name, and open any Pokémon to see its details rendered on the server.",
+    "paragraph2": "Select Pokémon to export them as a CSV file generated on the server, and switch between light and dark themes or between languages at any time.",
+    "stack": "Built with Next.js, React, Redux Toolkit, and next-intl."
+  },
+  "NotFound": {
+    "title": "404 — Page Not Found",
+    "description": "The page you are looking for does not exist.",
+    "backHome": "Back to Home"
+  },
+  "Common": {
+    "loading": "Loading Pokémon..."
+  }
+}

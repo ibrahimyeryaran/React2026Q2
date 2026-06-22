@@ -1,38 +1,51 @@
-import type { PaginationProps } from '../../types';
+import { getTranslations } from 'next-intl/server';
+import { Link } from '@/i18n/navigation';
 import styles from './Pagination.module.css';
 
-function Pagination({ currentPage, totalPages, onPageChange }: PaginationProps) {
+interface PaginationProps {
+  currentPage: number;
+  totalPages: number;
+  query: string;
+}
+
+export async function Pagination({
+  currentPage,
+  totalPages,
+  query,
+}: PaginationProps) {
+  const t = await getTranslations('Pagination');
+  const qs = query ? `?query=${encodeURIComponent(query)}` : '';
   const pages = Array.from({ length: totalPages }, (_, i) => i + 1);
 
   return (
     <div className={styles.pagination}>
-      <button
-        className={styles.button}
-        onClick={() => onPageChange(currentPage - 1)}
-        disabled={currentPage === 1}
-      >
-        &laquo; Prev
-      </button>
+      {currentPage > 1 ? (
+        <Link href={`/${currentPage - 1}${qs}`} className={styles.button}>
+          {t('prev')}
+        </Link>
+      ) : (
+        <span className={`${styles.button} ${styles.disabled}`}>{t('prev')}</span>
+      )}
+
       <div className={styles.pages}>
         {pages.map((page) => (
-          <button
+          <Link
             key={page}
+            href={`/${page}${qs}`}
             className={`${styles.button} ${page === currentPage ? styles.active : ''}`}
-            onClick={() => onPageChange(page)}
           >
             {page}
-          </button>
+          </Link>
         ))}
       </div>
-      <button
-        className={styles.button}
-        onClick={() => onPageChange(currentPage + 1)}
-        disabled={currentPage === totalPages}
-      >
-        Next &raquo;
-      </button>
+
+      {currentPage < totalPages ? (
+        <Link href={`/${currentPage + 1}${qs}`} className={styles.button}>
+          {t('next')}
+        </Link>
+      ) : (
+        <span className={`${styles.button} ${styles.disabled}`}>{t('next')}</span>
+      )}
     </div>
   );
 }
-
-export default Pagination;

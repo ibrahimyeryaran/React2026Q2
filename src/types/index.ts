@@ -1,5 +1,3 @@
-import type { ReactNode } from "react";
-
 export interface Item {
   id: number;
   name: string;
@@ -30,7 +28,7 @@ export interface PokemonDetail {
   sprites: {
     front_default: string;
     other?: {
-      "official-artwork"?: {
+      'official-artwork'?: {
         front_default: string;
       };
     };
@@ -42,55 +40,4 @@ export interface PokemonDetail {
       url: string;
     };
   }[];
-}
-
-export interface AppState {
-  searchTerm: string;
-  items: Item[];
-  loading: boolean;
-  error: string | null;
-}
-
-export interface SearchProps {
-  onSearch: (term: string) => void;
-  initialSearchTerm?: string;
-}
-
-export interface SearchState {
-  inputValue: string;
-}
-
-export interface ResultsProps {
-  items: Item[];
-  onItemClick?: (id: number) => void;
-}
-
-export interface CardProps {
-  name: string;
-  description: string;
-  image?: string;
-  height?: number;
-  weight?: number;
-  types?: string[];
-  id: number;
-  onClick?: (id: number) => void;
-}
-
-export interface PaginationProps {
-  currentPage: number;
-  totalPages: number;
-  onPageChange: (page: number) => void;
-}
-
-export interface ErrorBoundaryProps {
-  children?: ReactNode;
-}
-
-export interface ErrorBoundaryState {
-  hasError: boolean;
-  errorMessage: string;
-}
-
-export interface ErrorTestButtonState {
-  shouldThrow: boolean;
 }

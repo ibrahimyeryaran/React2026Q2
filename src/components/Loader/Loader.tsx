@@ -1,12 +1,10 @@
 import styles from './Loader.module.css';
 
-function Loader() {
+export function Loader({ label }: { label: string }) {
   return (
     <div className={styles.loaderContainer}>
       <div className={styles.spinner} />
-      <p className={styles.loaderText}>Loading Pokémon...</p>
+      <p className={styles.loaderText}>{label}</p>
     </div>
   );
 }
-
-export default Loader;
