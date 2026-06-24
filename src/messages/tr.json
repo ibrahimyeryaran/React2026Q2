@@ -1,0 +1,60 @@
+{
+  "Header": {
+    "title": "Pokemon Arama Uygulaması",
+    "home": "Ana Sayfa",
+    "about": "Hakkında",
+    "themeToDark": "🌙 Koyu",
+    "themeToLight": "☀️ Açık"
+  },
+  "Search": {
+    "placeholder": "Pokemon adı girin",
+    "button": "Ara"
+  },
+  "Results": {
+    "title": "Sonuçlar ({count})",
+    "empty": "Sonuç bulunamadı. Bir şeyler aramayı deneyin!"
+  },
+  "Card": {
+    "types": "Türler:",
+    "height": "Boy:",
+    "weight": "Ağırlık:",
+    "select": "{name} seç"
+  },
+  "Detail": {
+    "types": "Türler:",
+    "height": "Boy:",
+    "weight": "Ağırlık:",
+    "close": "✕ Kapat",
+    "empty": "Detayları görmek için bir Pokémon seçin.",
+    "notFound": "Pokémon bulunamadı."
+  },
+  "Pagination": {
+    "prev": "« Önceki",
+    "next": "Sonraki »"
+  },
+  "Flyout": {
+    "selected": "{count, plural, one {# öğe seçildi} other {# öğe seçildi}}",
+    "unselectAll": "Tümünü kaldır",
+    "download": "İndir"
+  },
+  "About": {
+    "title": "Hakkında",
+    "intro": "Bu, <course>RS School React Kursu</course> kapsamında React ile geliştirilmiş bir Pokemon Arama Uygulamasıdır.",
+    "authorLabel": "YAZAR",
+    "authorName": "Ibrahim Yeryaran",
+    "authorRole": "RS School React Öğrencisi"
+  },
+  "NotFound": {
+    "title": "404 — Sayfa Bulunamadı",
+    "description": "Aradığınız sayfa mevcut değil.",
+    "backHome": "Ana Sayfaya Dön"
+  },
+  "ErrorBoundary": {
+    "trigger": "Hata Sınırını Test Et",
+    "title": "Bir şeyler ters gitti!",
+    "reload": "Sayfayı Yenile"
+  },
+  "Common": {
+    "loading": "Pokémon yükleniyor..."
+  }
+}
