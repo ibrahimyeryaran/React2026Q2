@@ -38,11 +38,11 @@
     "download": "İndir"
   },
   "About": {
-    "title": "Uygulama Hakkında",
-    "intro": "Bu, Next.js App Router ile geliştirilmiş bir Pokémon arama uygulamasıdır.",
-    "paragraph1": "Orijinal 151 Pokémon'a göz atın, isme göre arayın ve herhangi bir Pokémon'u açarak sunucuda render edilen detaylarını görün.",
-    "paragraph2": "Pokémon'ları seçerek sunucuda oluşturulan bir CSV dosyası olarak dışa aktarın; açık/koyu tema ve diller arasında istediğiniz zaman geçiş yapın.",
-    "stack": "Next.js, React, Redux Toolkit ve next-intl ile geliştirilmiştir."
+    "title": "Hakkında",
+    "intro": "Bu, <course>RS School React Kursu</course> kapsamında React ile geliştirilmiş bir Pokemon Arama Uygulamasıdır.",
+    "authorLabel": "YAZAR",
+    "authorName": "Ibrahim Yeryaran",
+    "authorRole": "RS School React Öğrencisi"
   },
   "NotFound": {
     "title": "404 — Sayfa Bulunamadı",

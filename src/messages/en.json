@@ -38,11 +38,11 @@
     "download": "Download"
   },
   "About": {
-    "title": "About This App",
-    "intro": "This is a Pokémon search application built with Next.js App Router.",
-    "paragraph1": "Browse the original 151 Pokémon, search by name, and open any Pokémon to see its details rendered on the server.",
-    "paragraph2": "Select Pokémon to export them as a CSV file generated on the server, and switch between light and dark themes or between languages at any time.",
-    "stack": "Built with Next.js, React, Redux Toolkit, and next-intl."
+    "title": "About",
+    "intro": "This is a Pokemon Search App built with React as part of the <course>RS School React Course</course>.",
+    "authorLabel": "AUTHOR",
+    "authorName": "Ibrahim Yeryaran",
+    "authorRole": "RS School React Student"
   },
   "NotFound": {
     "title": "404 — Page Not Found",
