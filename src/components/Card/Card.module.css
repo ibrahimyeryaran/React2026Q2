@@ -15,6 +15,13 @@
   box-shadow: var(--shadow-card-hover);
 }
 
+.cardLink {
+  display: block;
+  text-decoration: none;
+  color: inherit;
+  cursor: pointer;
+}
+
 .cardSelected {
   border-color: var(--color-primary) !important;
   box-shadow: 0 0 0 2px var(--color-primary);

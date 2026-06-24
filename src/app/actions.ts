@@ -3,6 +3,7 @@
 import { getLocale } from 'next-intl/server';
 import { redirect } from '@/i18n/navigation';
 import { buildCsv } from '@/lib/csv';
+import { queryString } from '@/lib/href';
 import type { Item } from '@/types';
 
 /**
@@ -12,8 +13,7 @@ import type { Item } from '@/types';
 export async function searchAction(formData: FormData): Promise<void> {
   const query = String(formData.get('query') ?? '').trim();
   const locale = await getLocale();
-  const href = query ? `/1?query=${encodeURIComponent(query)}` : '/1';
-  redirect({ href, locale });
+  redirect({ href: `/1${queryString(query)}`, locale });
 }
 
 export interface CsvState {

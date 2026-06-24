@@ -1,5 +1,6 @@
 import { getTranslations } from 'next-intl/server';
 import { Link } from '@/i18n/navigation';
+import { queryString } from '@/lib/href';
 import styles from './Pagination.module.css';
 
 interface PaginationProps {
@@ -14,7 +15,7 @@ export async function Pagination({
   query,
 }: PaginationProps) {
   const t = await getTranslations('Pagination');
-  const qs = query ? `?query=${encodeURIComponent(query)}` : '';
+  const qs = queryString(query);
   const pages = Array.from({ length: totalPages }, (_, i) => i + 1);
 
   return (

@@ -1,5 +1,6 @@
 import { getTranslations } from 'next-intl/server';
 import { Card } from '../Card/Card';
+import { queryString } from '@/lib/href';
 import type { Item } from '@/types';
 import styles from './Results.module.css';
 
@@ -12,7 +13,7 @@ interface ResultsProps {
 
 export async function Results({ items, count, page, query }: ResultsProps) {
   const t = await getTranslations('Results');
-  const qs = query ? `?query=${encodeURIComponent(query)}` : '';
+  const qs = queryString(query);
 
   return (
     <div>

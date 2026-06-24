@@ -1,5 +1,6 @@
 import { getTranslations } from 'next-intl/server';
 import { getAllPokemons, filterAndPaginate } from '@/lib/pokemon';
+import { queryString } from '@/lib/href';
 import { SearchForm } from '../Search/SearchForm';
 import { Results } from '../Results/Results';
 import { Pagination } from '../Pagination/Pagination';
@@ -23,8 +24,7 @@ export async function SearchView({ page, query, selectedId }: SearchViewProps) {
     query,
     page
   );
-  const qs = query ? `?query=${encodeURIComponent(query)}` : '';
-  const closeHref = `/${safePage}${qs}`;
+  const closeHref = `/${safePage}${queryString(query)}`;
 
   return (
     <main className={styles.main}>
