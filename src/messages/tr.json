@@ -49,6 +49,11 @@
     "description": "Aradığınız sayfa mevcut değil.",
     "backHome": "Ana Sayfaya Dön"
   },
+  "ErrorBoundary": {
+    "trigger": "Hata Sınırını Test Et",
+    "title": "Bir şeyler ters gitti!",
+    "reload": "Sayfayı Yenile"
+  },
   "Common": {
     "loading": "Pokémon yükleniyor..."
   }

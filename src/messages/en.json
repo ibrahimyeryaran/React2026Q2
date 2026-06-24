@@ -49,6 +49,11 @@
     "description": "The page you are looking for does not exist.",
     "backHome": "Back to Home"
   },
+  "ErrorBoundary": {
+    "trigger": "Test Error Boundary",
+    "title": "Something went wrong!",
+    "reload": "Reload Page"
+  },
   "Common": {
     "loading": "Loading Pokémon..."
   }

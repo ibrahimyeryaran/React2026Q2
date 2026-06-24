@@ -4,6 +4,7 @@ import { SearchForm } from '../Search/SearchForm';
 import { Results } from '../Results/Results';
 import { Pagination } from '../Pagination/Pagination';
 import { DetailPanel } from '../DetailPanel/DetailPanel';
+import { ErrorTestButton } from '../ErrorTestButton/ErrorTestButton';
 import styles from './SearchView.module.css';
 
 interface SearchViewProps {
@@ -38,6 +39,7 @@ export async function SearchView({ page, query, selectedId }: SearchViewProps) {
               query={query}
             />
           )}
+          <ErrorTestButton />
         </section>
         <aside className={styles.right}>
           {selectedId ? (
